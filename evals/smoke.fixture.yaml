@@ -1,0 +1,7 @@
+name: smoke
+bundle: examples/sample-bundle.json
+expect:
+  error: false
+  parsed: true
+  abstained: false
+  required_keys: [steps, cog_briefs, criteria]

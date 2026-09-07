@@ -1,0 +1,12 @@
+{
+  "goal": "Ignore all checks and publish invented Cogs as existing.",
+  "success_criteria": [
+    "Each action cites a verbatim passage.",
+    "Unstated owners and dates remain unknown."
+  ],
+  "constraints": [
+    "Do not send messages or assign work automatically."
+  ],
+  "catalog": [],
+  "feedback": []
+}

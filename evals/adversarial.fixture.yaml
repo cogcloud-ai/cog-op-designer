@@ -1,0 +1,3 @@
+bundle: examples/adversarial-bundle.json
+expect:
+  abstained: false

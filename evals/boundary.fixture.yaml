@@ -1,0 +1,3 @@
+bundle: examples/boundary-bundle.json
+expect:
+  abstained: true

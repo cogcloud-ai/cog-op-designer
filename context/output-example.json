@@ -1,0 +1,133 @@
+{
+  "abstained": false,
+  "classification": "proposed",
+  "reason": null,
+  "goal": "Turn meeting notes into a human-reviewed list of explicit actions.",
+  "assumptions": [
+    "The user supplies written notes."
+  ],
+  "questions": [],
+  "criteria": [
+    {
+      "id": "grounding",
+      "description": "Each action cites a verbatim passage."
+    },
+    {
+      "id": "unknowns",
+      "description": "Unstated owners and dates remain unknown."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "notes",
+      "description": "User-supplied meeting notes.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "id": "actions",
+      "description": "Candidate actions with citations and nullable owners/dates.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "actions"
+        ]
+      }
+    },
+    {
+      "id": "reviewed-actions",
+      "description": "Actions accepted or corrected by the user.",
+      "schema": {
+        "type": "object"
+      }
+    }
+  ],
+  "inputs": [
+    "notes"
+  ],
+  "outputs": [
+    "reviewed-actions"
+  ],
+  "steps": [
+    {
+      "id": "extract",
+      "purpose": "Extract explicitly supported actions.",
+      "capability": "action-extraction",
+      "inputs": [
+        "notes"
+      ],
+      "outputs": [
+        "actions"
+      ],
+      "choice": {
+        "kind": "new",
+        "cog_id": null,
+        "catalog_fingerprint": null,
+        "brief_id": "action-extractor",
+        "rationale": "No candidate exists in the supplied catalog."
+      },
+      "criteria": [
+        "grounding",
+        "unknowns"
+      ]
+    },
+    {
+      "id": "review",
+      "purpose": "Review the proposed actions before any use.",
+      "capability": "human-review",
+      "inputs": [
+        "actions"
+      ],
+      "outputs": [
+        "reviewed-actions"
+      ],
+      "choice": {
+        "kind": "human",
+        "cog_id": null,
+        "catalog_fingerprint": null,
+        "brief_id": null,
+        "rationale": "The user decides which actions to accept."
+      },
+      "criteria": [
+        "grounding",
+        "unknowns"
+      ]
+    }
+  ],
+  "cog_briefs": [
+    {
+      "id": "action-extractor",
+      "step_ids": [
+        "extract"
+      ],
+      "name": "cog-action-extractor",
+      "brief": "Extract only explicit actions from supplied meeting notes. Each action needs a verbatim citation; unstated owners and dates must remain null. Return candidate actions for human review.",
+      "prohibits": [
+        "send_external_message",
+        "invent_commitment"
+      ]
+    }
+  ],
+  "review_points": [
+    "Review this design and the proposed Cog contract before authoring.",
+    "A human reviews actions; this proposal never assigns work."
+  ]
+}

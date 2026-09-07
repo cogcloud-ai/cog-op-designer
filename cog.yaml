@@ -1,0 +1,70 @@
+schema: openteams/cog-manifest [0.1]
+id: openteams/cog-op-designer
+version: 0.1.0
+summary: 'Designs reviewable Ops and grounded Cog-building briefs from a goal.
+
+  '
+license: BSD-3-Clause
+kind: context
+owner: trent@openteams.com
+frames: []
+context:
+  instructions: context/system.md
+  input_schema: context/input-schema.json
+  output_schema: context/output-schema.json
+  output_example: context/output-example.json
+requires:
+- capability: model-endpoint/openai-compatible
+  locality: any
+  satisfied_by:
+    cog: openteams/cog-qwen3b
+    version: '>=0.1.0'
+    source: ../cog-demo/cog-qwen3b
+interfaces:
+- name: web-api
+  kind: http-json
+  task: serve
+  endpoint: http://127.0.0.1:8116/ask
+  audience: usage
+  default: true
+- name: cli
+  kind: command
+  task: ask
+  audience: usage
+- name: health
+  kind: command
+  task: check
+  audience: lifecycle
+- name: composition
+  kind: command
+  task: composition
+  audience: lifecycle
+io:
+  accepts:
+  - task_request
+  produces:
+  - op_design_proposal
+memory: none
+prohibits:
+- execute_proposed_op
+- publish_package
+- send_external_message
+evaluation:
+  fixtures:
+  - evals/smoke.fixture.yaml
+extensions:
+  workbench_composition:
+    contract: openteams/context-composition [0.1-draft]
+    bridge_interface: composition
+    accepted_compositions:
+    - harness
+    - model+harness
+    required_features:
+    - context/per-turn
+    - memory/none
+    - json-output
+    allowed_localities:
+    - cloud
+    tools: none
+    checks: packaged-before-and-after
+    evidence_scope: composed-system
