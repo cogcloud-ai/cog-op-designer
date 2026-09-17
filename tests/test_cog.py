@@ -27,8 +27,8 @@ class DesignTests(unittest.TestCase):
     def test_invented_existing_cog(self):
         self.output['steps'][0]['choice'].update(kind='existing',cog_id='imaginary/cog',brief_id=None,catalog_fingerprint='a'*64);self.output['cog_briefs']=[]
         self.assertTrue(core.validate_output(self.output,self.input))
-    def test_tool_steps(self):
-        self.output['steps'][1]['choice']={'kind':'tool','cog_id':None,'catalog_fingerprint':None,'brief_id':None,'rationale':'Write the accepted actions to the tracker.'}
+    def test_code_steps(self):
+        self.output['steps'][1]['choice']={'kind':'code','cog_id':None,'catalog_fingerprint':None,'brief_id':None,'rationale':'Write the accepted actions to the tracker.'}
         self.assertEqual(core.validate_output(self.output,self.input),[])
         self.output['steps'][1]['choice']['brief_id']='action-extractor';self.assertTrue(core.validate_output(self.output,self.input))
         self.output['steps'][1]['choice'].update(brief_id=None,rationale=' ');self.assertTrue(core.validate_output(self.output,self.input))

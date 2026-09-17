@@ -87,9 +87,9 @@ def check_output(payload, bundle):
             new_steps.setdefault(choice['brief_id'], set()).add(step['id'])
         elif choice['kind'] == 'human':
             check(all(choice[k] is None for k in ('cog_id', 'catalog_fingerprint', 'brief_id')), 'Human steps have no Cog binding or build brief.')
-        elif choice['kind'] == 'tool':
-            check(all(choice[k] is None for k in ('cog_id', 'catalog_fingerprint', 'brief_id')), 'Tool steps have no Cog binding or build brief.')
-            check(bool(choice['rationale'].strip()), 'Tool steps must name the deterministic operation in their rationale.')
+        elif choice['kind'] == 'code':
+            check(all(choice[k] is None for k in ('cog_id', 'catalog_fingerprint', 'brief_id')), 'Code steps have no Cog binding or build brief.')
+            check(bool(choice['rationale'].strip()), 'Code steps must name the deterministic operation in their rationale.')
         else:
             check(False, 'Unknown step choice kind.')
     check(covered == criteria, 'Every acceptance criterion requires step coverage.')
