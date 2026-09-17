@@ -85,8 +85,13 @@ def check_output(payload, bundle):
             check(choice['cog_id'] is None and choice['catalog_fingerprint'] is None, 'New Cogs cannot claim existing identities.')
             check(choice['brief_id'] in briefs, 'New Cog choice requires a brief.')
             new_steps.setdefault(choice['brief_id'], set()).add(step['id'])
-        else:
+        elif choice['kind'] == 'human':
             check(all(choice[k] is None for k in ('cog_id', 'catalog_fingerprint', 'brief_id')), 'Human steps have no Cog binding or build brief.')
+        elif choice['kind'] == 'tool':
+            check(all(choice[k] is None for k in ('cog_id', 'catalog_fingerprint', 'brief_id')), 'Tool steps have no Cog binding or build brief.')
+            check(bool(choice['rationale'].strip()), 'Tool steps must name the deterministic operation in their rationale.')
+        else:
+            check(False, 'Unknown step choice kind.')
     check(covered == criteria, 'Every acceptance criterion requires step coverage.')
     check(set(payload['outputs']) <= available, 'Op outputs have no producer or supplied input.')
     check(set(artifacts) == available, 'Unused or unproduced artifact declarations.')

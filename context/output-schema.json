@@ -150,7 +150,8 @@
                 "enum": [
                   "existing",
                   "new",
-                  "human"
+                  "human",
+                  "tool"
                 ]
               },
               "cog_id": {
