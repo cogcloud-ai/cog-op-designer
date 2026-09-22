@@ -43,3 +43,10 @@ subscription composition must identify the combined model and harness; they
 cannot be reported as bare-model evaluation results.
 
 See sibling `cog-workbench/docs/tool-suite.md` for the complete workflow.
+
+## License
+
+Copyright 2026 OpenTeams. Licensed under the [Apache License 2.0](LICENSE).
+Third-party dependencies and external model services retain their own licenses
+and terms. Previously published BSD-3-Clause versions remain available under
+that license.

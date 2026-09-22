@@ -1,4 +1,5 @@
 [workspace]
+license = "Apache-2.0"
 name = "cog-op-designer"
 version = "0.1.0"
 description = "Designs reviewable Ops and grounded Cog-building briefs from a goal."

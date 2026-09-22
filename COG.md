@@ -3,7 +3,7 @@ type: cog [0.1]
 name: cog-op-designer
 description: Designs reviewable Ops and Cog-building briefs from a goal.
 version: "0.1.0"
-license: BSD-3-Clause
+license: Apache-2.0
 publisher: OpenTeams
 manifest: cog.yaml
 manifest_schema: openteams/cog-manifest [0.1]
