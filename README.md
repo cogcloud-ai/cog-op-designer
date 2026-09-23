@@ -43,3 +43,22 @@ subscription composition must identify the combined model and harness; they
 cannot be reported as bare-model evaluation results.
 
 See sibling `cog-workbench/docs/tool-suite.md` for the complete workflow.
+
+New build briefs may declare `cog_kind: code` for explicit-rule work (legacy
+omission means context). Use `choice.kind: new` with a brief for either kind,
+or `existing` with a catalog identity. The legacy unbound `code` choice remains
+readable but Workbench refuses its build handoff until it has a real brief or
+catalog choice. Pure code authoring is supported; external effects are outside
+this first code-building extension.
+
+## License
+
+Copyright 2026 OpenTeams. Licensed under the [Apache License 2.0](LICENSE).
+Third-party dependencies and external model services retain their own licenses
+and terms. Previously published BSD-3-Clause versions remain available under
+that license.
+
+## Public preview
+
+See the [suite guide](https://github.com/cogcloud-ai/cog-op-builder/blob/main/docs/repositories.md)
+for repository roles, supported setup, and current limitations.

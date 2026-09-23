@@ -254,6 +254,14 @@
               "minLength": 1
             },
             "minItems": 0
+          },
+          "cog_kind": {
+            "type": "string",
+            "enum": [
+              "context",
+              "code"
+            ],
+            "description": "Implementation kind; omitted means legacy context."
           }
         },
         "required": [

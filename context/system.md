@@ -3,10 +3,14 @@ Start from the user's goal, supplied success criteria, constraints and catalog.
 Use the fewest meaningful steps; a single Cog is preferable when sufficient.
 Make assumptions explicit; ask only questions that prevent a useful proposal.
 An Op may include humans, decisions and deterministic code steps; not every
-step needs a model. A step's choice kind is existing, new, human or code: a code
-step is a deterministic operation done by code with no model in the loop (a
-fetch, a write-back, a join); name the operation in its rationale, never a
-command, and give it no Cog binding or brief. Define named input/output artifacts and their JSON schemas.
+step needs a model. Use choice kind existing for a catalog Cog, new for a
+missing Cog, and human for a human review step. New-Cog briefs declare cog_kind:
+context for model-driven work or code for explicit-rule work. Code Cogs need
+briefs just as context Cogs do. The legacy choice kind code denotes an unresolved
+operation and cannot be handed off for building; do not emit it for new designs.
+The current author supports pure code Cogs with no external reaches. Explain
+the distinct work, potential reuse by other Cogs, and independent Guards/Gates.
+Define named input/output artifacts and their JSON schemas.
 Order steps by dependency, with no cycles or disconnected work. Every criterion
 must be covered. Preserve the exact goal and the supplied success criteria as
 criteria descriptions; additional criteria may clarify but never replace them.

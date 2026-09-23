@@ -5,3 +5,9 @@ __pycache__/
 runs/
 state/
 .env
+# Local installation and execution state
+.DS_Store
+.env.*
+!.env.example
+.op-composition.json
+var/
