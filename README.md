@@ -18,7 +18,8 @@ pixi run resolve
 pixi run ask -- --bundle examples/sample-bundle.json
 ```
 
-The default model is a workspace-relative convenience. A capable model and an
+The default model reference in `cog.yaml` is a legacy sibling-checkout
+convenience and is not distributed with this Cog. A capable model and an
 explicit binding are needed for useful designs. Workbench's `/studio` screen
 can instead compose this Cog with an admitted Harness-only or Model+Harness Cog
 through the declared `composition` interface. It executes the packaged input
@@ -42,7 +43,7 @@ or complete. Workbench's binding qualification is a separate concern.
 subscription composition must identify the combined model and harness; they
 cannot be reported as bare-model evaluation results.
 
-See sibling `cog-workbench/docs/tool-suite.md` for the complete workflow.
+See the Workbench [tool-suite guide](https://github.com/cogcloud-ai/cog-workbench/blob/main/docs/tool-suite.md) for the complete workflow.
 
 New build briefs may declare `cog_kind: code` for explicit-rule work (legacy
 omission means context). Use `choice.kind: new` with a brief for either kind,
