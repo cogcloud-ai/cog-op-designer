@@ -39,6 +39,10 @@ interfaces:
   kind: command
   task: composition
   audience: lifecycle
+- name: design-handoff
+  kind: command
+  task: design-handoff
+  audience: lifecycle
 io:
   accepts:
   - task_request
