@@ -115,3 +115,12 @@ steps. Unbound legacy code choices, effectful Cogs, rejected or stale child
 candidates, cross-proposal children and incompatible schemas are refused. A
 custom authority workflow or data conversion needs an explicit revised proposal.
 Hash receipts correlate saved artifacts; they do not authenticate a reviewer.
+
+Finalization validates supplied pending/decision documents against the current
+behavior files and source snapshot. It does not read a terminal child Track or
+authenticate acceptance: someone who can edit all local receipts can change a
+rejection to acceptance. Locks, tests and other evidence-only files are outside
+the behavior digest unless included in the source snapshot. Use retained accepted
+Track documents as the source of these receipts; do not edit decisions to change
+a rejected child's status. The public handoff example requests a pure-code child
+compatible with the native Builder's supported slice.

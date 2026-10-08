@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / 'src'))
 sys.path.insert(0, str(WORKSPACE / 'cog-workbench/src'))
 sys.path.insert(0, str(WORKSPACE / 'cog-smith/templates/op/src'))
 import cog_core
+import cog_package
 import op_runner
 import op_spec
 from workbench_suite import Suite, clean, digest, package_digest, require
@@ -168,7 +169,7 @@ def main():
         result = prepare(**document) if args.operation == 'prepare' else finalize(**document)
         envelope = cog_core._envelope('design-handoff', True, payload=result, binding={'source': 'deterministic-design-handoff'})
         code = 0
-    except (ValueError, KeyError, TypeError, OSError, op_spec.OpSpecError) as exc:
+    except (ValueError, KeyError, TypeError, OSError, op_spec.OpSpecError, cog_package.PackageError) as exc:
         envelope = cog_core._fail('design-handoff', 'invalid-handoff', str(exc)); code = 1
     print(json.dumps(envelope))
     return code

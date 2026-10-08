@@ -63,6 +63,12 @@ class HandoffTests(unittest.TestCase):
     def finalize(self):
         return handoff.finalize(self.prepared, {self.missing['missing_cog_id']: self.child}, {self.card['id']: {'path': str(self.reuse), 'task': 'run'}}, {'id': 'example/op-text', 'version': '0.1.0', 'name': 'Text fixture'}, self.workspace / 'op-text', self.suite)
 
+    def test_public_example_requests_supported_code_child(self):
+        value=json.loads((ROOT/'examples/handoff-input.json').read_text())
+        prepared=handoff.prepare(**value)
+        self.assertTrue(prepared['missing_cogs'])
+        self.assertTrue(all(row['builder_request']['kind']=='code' for row in prepared['missing_cogs']))
+
     def test_identities_are_stable_and_change_when_proposal_changes(self):
         self.assertEqual(self.prepared, handoff.prepare(self.request, copy.deepcopy(self.envelope)))
         self.envelope['payload']['assumptions'].append('A new assumption')

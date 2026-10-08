@@ -145,7 +145,8 @@
           "prohibits": [
             "send_external_message",
             "invent_commitment"
-          ]
+          ],
+          "cog_kind": "code"
         }
       ],
       "review_points": [
