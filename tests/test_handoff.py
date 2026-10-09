@@ -1,5 +1,7 @@
 """Synthetic accepted child artifacts, mixed reuse, and final native Op validation."""
 import copy
+import contextlib
+import io
 import importlib.util
 import json
 from pathlib import Path
@@ -7,6 +9,7 @@ import shutil
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,7 +50,7 @@ class HandoffTests(unittest.TestCase):
         return root
 
     def acceptance(self):
-        contract = {'kind': 'code', 'input_schema': self.schema, 'output_schema': json.loads((self.new / 'context/output-schema.json').read_text()), 'prohibits': [], 'acceptance_criteria': [{'id': 'keep', 'description': 'Keep the text.'}]}
+        contract = {'kind': 'code', 'input_schema': self.schema, 'output_schema': json.loads((self.new / 'context/output-schema.json').read_text()), 'prohibits': list(self.missing['prohibits']), 'acceptance_criteria': [{'id': 'keep', 'description': 'Keep the text.'}]}
         files = [{'path': name, 'content': (self.new / name).read_text()} for name in ['src/task_logic.py', 'context/input-schema.json', 'context/output-schema.json']]
         snapshot = {'operation': 'plan', 'contract': contract, 'files': files, 'evidence': []}
         source = handoff.digest({'contract': contract, 'files': sorted(files, key=lambda r: r['path'])})
@@ -107,3 +110,27 @@ class HandoffTests(unittest.TestCase):
         (self.reuse / 'src/task_logic.py').write_text('# changed after proposal\n')
         with self.assertRaisesRegex(ValueError, 'Reused Cog'):
             self.finalize()
+
+    def test_public_example_finalizes_with_matching_synthetic_child_receipts(self):
+        value=json.loads((ROOT/'examples/handoff-input.json').read_text())
+        self.prepared=handoff.prepare(**value);self.missing=self.prepared['missing_cogs'][0]
+        actions=next(row['schema'] for row in value['envelope']['payload']['artifacts'] if row['id']=='actions')
+        (self.new/'context/output-schema.json').write_text(json.dumps(actions))
+        manifest=yaml.safe_load((self.new/'cog.yaml').read_text())
+        manifest['prohibits']=self.missing['prohibits'];(self.new/'cog.yaml').write_text(yaml.safe_dump(manifest))
+        child=self.acceptance()
+        result=handoff.finalize(self.prepared,{self.missing['missing_cog_id']:child},{},{'id':'example/op-actions','version':'0.1.0','name':'Actions'},self.workspace/'op-actions',self.suite)
+        spec=handoff.op_spec.OpSpec(result['op_spec'])
+        self.assertEqual(spec.steps[0]['id'],'extract');self.assertEqual(spec.steps[0]['gate']['policy'],'human')
+        self.assertEqual(spec.steps[0]['cog']['id'],'example/cog-child')
+        self.assertEqual(handoff.op_spec.declaration_problems(spec,self.workspace/'op-actions'),[])
+        self.assertEqual(result['child_acceptances'][self.missing['missing_cog_id']],handoff.digest(child['decision']))
+
+    def test_cli_nonpackage_reuse_emits_structured_handoff_error(self):
+        path=self.workspace/'finalize.json'
+        document={'handoff':self.prepared,'children':{self.missing['missing_cog_id']:self.child},'reused':{self.card['id']:{'path':str(self.workspace/'not-a-package'),'task':'run'}},'op_identity':{'id':'example/op-text','version':'0.1.0','name':'Text fixture'},'op_dir':str(self.workspace/'op-text')}
+        path.write_text(json.dumps(document))
+        with patch.object(sys,'argv',['design-handoff','finalize','--request',str(path)]),contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertEqual(handoff.main(),1)
+        envelope=json.loads(output.getvalue());self.assertEqual(envelope['error']['code'],'invalid-handoff')
+        self.assertFalse(envelope['ok']);self.assertFalse((self.workspace/'op-text').exists())
